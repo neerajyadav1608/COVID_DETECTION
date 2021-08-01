@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>COVID-19 TESTING</title>
+		<link rel="stylesheet" type="text/css" href="CSS/ss.css">
+	</head>
+
+	<body>
+        <header>
+            <div class="logo">
+                <img src="https://res.cloudinary.com/shankygupta79/image/upload/v1605858442/WhatsApp_Image_2020-11-20_at_13.16.59_zkleyx.jpg">
+            </div>
+            <div class="title">
+		<h1>CORONA VIRUS TESTING</h1>
+        <h2>UPLOAD X-RAY</h2>
+        <h3>UPLOAD CT-SCAN</h3>
+		<input id="image-selector" class="bl1" type="file"> 
+        <input id="image-selector2" class="bl2" type="file"> 
+		<button id="predict-button">Predict</button>
+		<p1>PREDICTION: <span id="result">...</span></p1>
+		<p2>PROBABILITY: <span id="probability">...</span></p2>
+        <img id="selected-image1" width="400" src=""/ class="bl3">
+        <img id="selected-image2" width="400" src=""/ class="bl4">
+        </div>
+    </header>
+	</body>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<style>
+    *{
+    margin: 0;
+    padding: 0;
+    font-family: Century Gothic;
+}
+
+header{
+    background-image:linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)), url('https://res.cloudinary.com/shankygupta79/image/upload/v1605858454/WhatsApp_Image_2020-11-20_at_13.17.00_jxisdu.jpg');
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+}
+.logo img{
+    float: right;
+    width: 150px;
+    height: auto;
+}
+.title{
+    position: absolute;
+    top: 10%;
+    left: 30%;
+}
+.title h1{
+    color: #fff;
+    font-size: 50px;
+}
+.title h2{
+    color: #fff;
+    position: fixed;
+    font-size: 30px;
+    left: 25%;
+    top: 25%;
+}
+.title h3{
+    color: #fff;
+    position: fixed;
+    font-size: 30px;
+    right: 20%;
+    top: 25%;
+}
+button{
+    border: 1px solid #fff;
+    padding: 10px 30px;
+    color: #000;
+    text-decoration: none;
+    position: fixed;
+    top: 53%;
+    left: 47.5%;
+}
+.bl1{
+    border: 1px solid #fff;
+    padding: 10px 30px;
+    color: #000;
+    text-decoration: none;
+    position: fixed;
+    top: 40%;
+    left: 20%;
+}
+.bl2{
+    
+    border: 1px solid #fff;
+    padding: 10px 30px;
+    color: #000;
+    text-decoration: none;
+    top: 40%;
+    position: fixed;
+    left: 58%;
+
+}
+p1{
+    color: #fff;
+    position: fixed;
+    font-size: 25px;
+    top: 65%;
+    left: 45%;
+}
+p2{
+    color: #fff;
+    position: fixed;
+    font-size: 25px;
+    top: 72%;
+    left: 45%;
+}
+.bl3{
+    position: fixed;
+    top: 30%;
+    left: 4%;
+    height: 180px;
+    width: 180px;
+
+}
+.bl4{
+    position: fixed;
+    top: 30%;
+    right: 2%;
+    height: 180px;
+    width: 180px;
+}
+
+</style>
+<script>
+    let base64Image;
+    $("#image-selector").change(function() {
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            let dataURL = reader.result;
+            $('#selected-image1').attr("src", dataURL);
+            base64Image = dataURL.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
+            console.log(base64Image);
+        }
+        reader.readAsDataURL($("#image-selector")[0].files[0]);
+        $("#result").text("");
+        $("#probability").text("");
+
+    });
+
+
+    $("#predict-button").click(function(){
+            let message = {
+            image: base64Image
+        }
+        console.log(message);
+        $.post("http://127.0.0.1:5000/predict", JSON.stringify(message), function(response){
+            $("#result").text(response.prediction.result);
+            $("#probability").text(response.prediction.accuracy.toFixed(2));
+            console.log(response);
+        });
+    });
+    $("#image-selector2").change(function() {
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            let dataURL = reader.result;
+            $('#selected-image2').attr("src", dataURL);
+            base64Image = dataURL.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
+            console.log(base64Image);
+        }
+        reader.readAsDataURL($("#image-selector2")[0].files[0]);
+        $("#result").text("");
+        $("#probability").text("");
+
+    });
+
+
+    $("#predict-button").click(function(){
+            let message = {
+            image: base64Image
+        }
+        console.log(message);
+        $.post("http://127.0.0.1:5000/predict", JSON.stringify(message), function(response){
+            $("#result").text(response.prediction.result);
+            $("#probability").text(response.prediction.accuracy.toFixed(2));
+            console.log(response);
+        });
+    });
+    
+</script>
+
+</html>
